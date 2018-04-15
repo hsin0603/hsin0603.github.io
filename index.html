@@ -69,9 +69,9 @@ $(document).ready(function(){
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
     <style>
-      .toggler { width: 900px; height: 500px; }
+      .toggler { width: 1000px; height: 500px; }
       #button { padding: .5em 1em; text-decoration: none; }
-      #effect { width: 800px; height: 400px; padding:100.em; position: relative; }
+      #effect { width: 900px; height: 400px; padding:100.em; position: relative; }
       #effect h3 { margin: 0; padding: 0.4em; text-align: center; }
     </style>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -88,7 +88,7 @@ $(document).ready(function(){
           } else if ( selectedEffect === "size" ) {
             options = { to: { width: 280, height: 185 } };
           }
-          $( "#effect" ).show( selectedEffect, options, 500, callback );
+          $( "#effect" ).show( selectedEffect, options, 1500, callback );
         };
         function callback() {
           setTimeout(function() {
