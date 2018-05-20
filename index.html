@@ -1,33 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <?php
-$con = mysql_connect("localhost","peter","abc123");
-if (!$con)
-  {
-  die('Could not connect: ' . mysql_error());
-  }
-
-mysql_select_db("my_db", $con);
-
-$result = mysql_query("SELECT * FROM Persons");
-
-echo "<table border='1'>
-<tr>
-<th>Firstname</th>
-<th>Lastname</th>
-</tr>";
-
-while($row = mysql_fetch_array($result))
-  {
-  echo "<tr>";
-  echo "<td>" . $row['FirstName'] . "</td>";
-  echo "<td>" . $row['LastName'] . "</td>";
-  echo "</tr>";
-  }
-echo "</table>";
-
-mysql_close($con);
-?>
+ 
   <head>
     <style type="text/css">
       .orange-text {
@@ -39,6 +12,20 @@ mysql_close($con);
     <div>
   <marquee><h2 class="orange-text">welcome to Hsin's map</h2></marquee>
 </div>
+    
+<script src="https://www.gstatic.com/firebasejs/5.0.3/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCqLoRHFpLOWw5IRqyYC3jLKB7gY1wnA50",
+    authDomain: "hsin-204707.firebaseapp.com",
+    databaseURL: "https://hsin-204707.firebaseio.com",
+    projectId: "hsin-204707",
+    storageBucket: "hsin-204707.appspot.com",
+    messagingSenderId: "32509099489"
+  };
+  firebase.initializeApp(config);
+</script>
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcXuXB9-1cpWE6KW_J3Ha1e5pVogx9uPU">
     </script>
@@ -58,5 +45,65 @@ mysql_close($con);
   </head>
   <body>
 <div id="map-canvas"></div>
+    var account = document.getElementById("account");
+var pwd = document.getElementById("pwd");
+var registerSmtBtn = document.getElementById("registerSmtBtn");
+registerSmtBtn.addEventListener("click", function(){
+        console.log(account.value);
+    firebase.auth().createUserWithEmailAndPassword(account.value, pwd.value).catch(function(error) {
+    // Handle Errors here.
+
+    var errorCode = error.code;
+    var errorMsg = error.message;
+    console.log(errorMsg);
+  });
+},false);
+    var userLogin;
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    userLogin = user;
+    console.log("User is logined", user)
+  } else {
+    userLogin = null;
+    console.log("User is not logined yet.");
+  }
+});
+    var signoutSmtBtn = document.getElementById("signoutSmtBtn");
+signoutSmtBtn.addEventListener("click",function(){
+    firebase.auth().signOut().then(function() {
+        console.log("User sign out!");
+    }, function(error) {
+    console.log("User sign out error!");
+    })
+},false);
+    var verifyBtn = document.getElementById("verifyBtn");
+verifyBtn.addEventListener("click",function(){
+  userLogin.sendEmailVerification().then(function() {
+    console.log("驗證信寄出");
+  }, function(error) {
+    console.error("驗證信錯誤");
+  });
+},false);
+
+//更改密碼
+
+var chgPwd = document.getElementById("chgPwd");
+var chgPwdBtn = document.getElementById("chgPwdBtn");
+chgPwdBtn.addEventListener("click",function(){
+    firebase.auth().sendPasswordResetEmail(chgPwd.value).then(function() {
+    // Email sent.
+
+    console.log("更改密碼Email已發送");
+    chgPwd.value = "";
+  }, function(error) {
+    // An error happened.
+
+    console.error("更改密碼",error);
+  });
+},false);
+    const credential = firebase.auth.EmailAuthProvider.credential(user.auth.email, password);
+ user.auth.reauthenticate(credential).then(() => {
+     user.auth.delete();
+ });
   </body>
 </html>
